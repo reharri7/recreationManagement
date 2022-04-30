@@ -1,10 +1,13 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import IUser from '../models/user.model';
 import {delay, filter, map, switchMap} from 'rxjs/operators';
+import firebase from 'firebase/compat/app';
+import {ToastService} from './toast.service';
+import auth = firebase.auth;
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +19,15 @@ export class AuthService {
   private redirect = false;
 
   constructor(
-    private auth: AngularFireAuth,
+    private afAuth: AngularFireAuth,
     private db: AngularFirestore,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ngZone: NgZone,
+    private presentToast: ToastService,
   ) {
     this.usersCollection = db.collection('users');
-    this.isAuthenticated$ = auth.user.pipe(
+    this.isAuthenticated$ = afAuth.user.pipe(
       map(user => !!user)
     );
     this.isAuthenticatedWithDelay$ = this.isAuthenticated$.pipe(
@@ -42,7 +47,7 @@ export class AuthService {
     if (!userData.password) {
       throw new Error('Password not provided');
     }
-    const userCred = await this.auth.createUserWithEmailAndPassword(
+    const userCred = await this.afAuth.createUserWithEmailAndPassword(
       userData.email, userData.password
     );
     if (!userCred.user) {
@@ -54,14 +59,33 @@ export class AuthService {
     });
   }
 
+  // Firebase SignInWithPopup
+  public async oAuthProvider(provider) {
+    return this.afAuth.signInWithPopup(provider)
+      .then((res) => {
+        this.ngZone.run(() => {
+          this.router.navigate(['home']);
+        });
+      }).catch((error) => {
+        window.alert(error);
+      });
+  }
+  // Firebase Google Sign-in
+  public async signInWithGoogle() {
+    return this.oAuthProvider(new auth.GoogleAuthProvider())
+      .then(res => {
+        this.presentToast.presentToast('Successfully Logged In!', 3000, 'success');
+      }).catch(error => {
+        this.presentToast.presentToast('We are having trouble logging you in. Please try again later', 5000, 'danger');
+      });
+  }
+
   public async logout($event?: Event) {
     if($event){
       $event.preventDefault();
     }
-    await this.auth.signOut();
-    if(this.redirect) {
-      await this.router.navigateByUrl('/');
-    }
+    await this.afAuth.signOut();
+    await this.router.navigateByUrl('/');
   }
 
 }
