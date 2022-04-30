@@ -6,6 +6,7 @@ import {Observable, of} from 'rxjs';
 import IUser from '../models/user.model';
 import {delay, filter, map, switchMap} from 'rxjs/operators';
 import firebase from 'firebase/compat/app';
+import {ToastService} from './toast.service';
 import auth = firebase.auth;
 
 @Injectable({
@@ -22,7 +23,8 @@ export class AuthService {
     private db: AngularFirestore,
     private router: Router,
     private route: ActivatedRoute,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private presentToast: ToastService,
   ) {
     this.usersCollection = db.collection('users');
     this.isAuthenticated$ = afAuth.user.pipe(
@@ -72,9 +74,9 @@ export class AuthService {
   public async signInWithGoogle() {
     return this.oAuthProvider(new auth.GoogleAuthProvider())
       .then(res => {
-        console.log('Successfully logged in!');
+        this.presentToast.presentToast('Successfully Logged In!', 3000, 'success');
       }).catch(error => {
-        console.log(error);
+        this.presentToast.presentToast('We are having trouble logging you in. Please try again later', 5000, 'danger');
       });
   }
 
@@ -83,9 +85,7 @@ export class AuthService {
       $event.preventDefault();
     }
     await this.afAuth.signOut();
-    if(this.redirect) {
-      await this.router.navigateByUrl('/');
-    }
+    await this.router.navigateByUrl('/');
   }
 
 }
