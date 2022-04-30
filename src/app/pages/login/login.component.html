@@ -1,3 +1,26 @@
-<p>
-  login works!
-</p>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Login
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Login</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <h1 style="text-align: center">Welcome to Recreation Management</h1>
+  <ion-card style="width: 60%; margin: 0 auto">
+    <ion-card-content>
+      <ion-button expand="block" color="primary" (click)="logInWithGoogle()">
+        <ion-icon slot="start" name="logo-google"></ion-icon>
+        LogIn with Google
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
