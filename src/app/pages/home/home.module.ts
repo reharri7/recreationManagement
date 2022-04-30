@@ -4,14 +4,18 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HomePage} from './home-page.component';
 import {HomePageRoutingModule} from './home-routing.module';
+import {GameCardComponent} from '../../game-card/game-card.component';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
   ],
-  declarations: [HomePage]
+  declarations: [
+    HomePage,
+    GameCardComponent,
+  ]
 })
 export class HomePageModule {}
