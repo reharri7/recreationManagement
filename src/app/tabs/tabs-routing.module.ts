@@ -9,19 +9,20 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadChildren: () => import('../pages/home/home.module').then(m => m.HomePageModule)
+        loadChildren: () => import('../pages/home/home.module').then(m => m.HomePageModule),
       },
       {
         path: '',
         redirectTo: '/tabs/home',
-        pathMatch: 'full'
+        pathMatch: 'full',
+
       }
     ]
   },
   {
     path: '',
     redirectTo: '/tabs/home',
-    pathMatch: 'full'
+    pathMatch: 'full',
   }
 ];
 
