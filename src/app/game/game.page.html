@@ -6,6 +6,14 @@
 
 <ion-content>
 
-  <app-team-card *ngFor="let team of teams"></app-team-card>
+    <ion-item>
+      <h1 style="width: 50%;">Team Name</h1>
+      <br />
+      <div id="controls">
+        <ion-icon name="remove-circle" (click)="decrementTeamScore()"></ion-icon>
+        <span>{{ currentNumber }}</span>
+        <ion-icon name="add-circle" (click)="incrementTeamScore()"></ion-icon>
+      </div>
+    </ion-item>
 
 </ion-content>
