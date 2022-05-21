@@ -1,7 +1,10 @@
+import firebase from 'firebase/compat/app';
+
 export default interface ITeam {
-  id: string;
+  docID?: string;
+  gameId?: string;
   score: number;
-  scoreLastUpdated: Date;
+  timestamp: firebase.firestore.FieldValue;
   color: string;
   name: string;
 }
