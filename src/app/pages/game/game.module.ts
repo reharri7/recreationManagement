@@ -9,12 +9,12 @@ import {GamePageRoutingModule} from './game-routing.module';
 import {GamePage} from './game.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    GamePageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        GamePageRoutingModule,
+    ],
   declarations: [GamePage]
 })
 export class GamePageModule {}

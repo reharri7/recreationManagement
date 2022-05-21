@@ -3,10 +3,10 @@ import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Observable, of} from 'rxjs';
-import IUser from '../models/user.model';
+import IUser from '../../models/user.model';
 import {delay, filter, map, switchMap} from 'rxjs/operators';
 import firebase from 'firebase/compat/app';
-import {ToastService} from './toast.service';
+import {ToastService} from '../Toast/toast.service';
 import auth = firebase.auth;
 
 @Injectable({

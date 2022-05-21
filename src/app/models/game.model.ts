@@ -1,7 +1,6 @@
-import ITeam from './team.model';
+import firebase from 'firebase/compat/app';
 
 export default interface IGame {
-  id: string;
-  teams: ITeam[];
-  date: Date;
+  docID?: string;
+  timestamp: firebase.firestore.FieldValue;
 }
