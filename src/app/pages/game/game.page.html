@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Game 03/02/2022</ion-title>
+    <ion-title *ngIf="!isLoading">{{convertFirebaseTimestampToDate(currentGame?.timestamp) | date :"medium"}}</ion-title>
   </ion-toolbar>
 </ion-header>
 

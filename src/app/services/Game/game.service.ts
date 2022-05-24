@@ -22,4 +22,10 @@ export class GameService {
   async getGames() {
     return await firebase.firestore().collection('games').get();
   }
+
+  async getGameById(id: string) {
+    const teamRef = this.gamesCollection.ref;
+    const teamsByGameIdQuery = teamRef.where(firebase.firestore.FieldPath.documentId(), '==', id).limit(1);
+    return await teamsByGameIdQuery.get();
+  }
 }

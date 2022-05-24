@@ -3,6 +3,9 @@ import {ToastService} from '../../services/Toast/toast.service';
 import ITeam from '../../models/team.model';
 import IGame from '../../models/game.model';
 import firebase from 'firebase/compat/app';
+import {GameService} from '../../services/Game/game.service';
+import {TeamService} from '../../services/Team/team.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -10,11 +13,8 @@ import firebase from 'firebase/compat/app';
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage implements OnInit {
-  public currentGame: IGame = {
-    docID: '1',
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-  };
-  public teams: ITeam[] = [
+  public currentGame: IGame;
+  public currentTeams: ITeam[] = [
     {
       docID: '1',
       gameId: '1',
@@ -64,9 +64,22 @@ export class GamePage implements OnInit {
       name:'Orange Team',
     },
 ];
-  constructor(private presentToastService: ToastService) { }
+  public isLoading = false;
+  private gameId = '';
+  constructor(
+    private presentToastService: ToastService,
+    private gameService: GameService,
+    private teamService: TeamService,
+    private route: ActivatedRoute
+  ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.isLoading = true;
+    this.gameId = this.route.snapshot.params.id;
+    if(this.gameId) {
+      await this.getTeams();
+    }
+    this.isLoading = false;
   }
 
   public async incrementTeamScore(team: ITeam) {
@@ -83,6 +96,23 @@ export class GamePage implements OnInit {
     } else {
       await this.presentToastService.presentToast('Team score cannot be below 0', 3000, 'danger');
     }
+  }
+
+  public async getTeams() {
+    const gameResult = await this.gameService.getGameById(this.gameId);
+    if(gameResult != null) {
+      gameResult.docs.map(game => {
+        this.currentGame = {
+          docID: this.gameId,
+          ...game.data()
+        };
+      });
+    }
+
+  }
+
+  convertFirebaseTimestampToDate(incomingTimestamp: any): Date {
+    return new Date(incomingTimestamp.seconds * 1000);
   }
 
 }
