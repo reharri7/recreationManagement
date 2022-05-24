@@ -6,10 +6,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" style="text-align: center;">
+<ion-content [fullscreen]="true" style="text-align: center;" *ngIf="!isLoading">
   <h1>List of Games <ion-icon name="arrow-down-circle"></ion-icon></h1>
-  <ion-item (click)="routeToGame()">
-    <h1>Date: 03/02/2022</h1>
+  <ion-item *ngFor="let game of currentGames" (click)="routeToGame(game.docID)">
+    <h1>{{convertFirebaseTimestampToDate(game.timestamp) | date :"medium"}}</h1>
   </ion-item>
   <ion-item color="success" (click)="createDefaultGame()">
     <h1>Create New Game <ion-icon name="add-circle"></ion-icon></h1>

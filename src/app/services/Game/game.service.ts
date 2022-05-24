@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
 import IGame from '../../models/game.model';
-import firebase from 'firebase/compat';
+import firebase from 'firebase/compat/app';
 import DocumentReference = firebase.firestore.DocumentReference;
 
 @Injectable({
@@ -17,5 +17,9 @@ export class GameService {
 
   async createGame(data: IGame): Promise<DocumentReference<IGame>> {
     return await this.gamesCollection.add(data);
+  }
+
+  async getGames() {
+    return await firebase.firestore().collection('games').get();
   }
 }

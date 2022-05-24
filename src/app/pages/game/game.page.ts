@@ -73,7 +73,7 @@ export class GamePage implements OnInit {
     if(team.score < 10000) {
       team.score += 100;
     } else {
-      await this.presentToastService.presentToast('Team score cannot reach 100', 3000, 'danger');
+      await this.presentToastService.presentToast('Team score cannot reach 10000', 3000, 'danger');
     }
   }
 
