@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ToastService} from '../../services/Toast/toast.service';
 import ITeam from '../../models/team.model';
 import IGame from '../../models/game.model';
-import firebase from 'firebase/compat/app';
 import {GameService} from '../../services/Game/game.service';
 import {TeamService} from '../../services/Team/team.service';
 import {ActivatedRoute} from '@angular/router';
@@ -14,56 +13,7 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class GamePage implements OnInit {
   public currentGame: IGame;
-  public currentTeams: ITeam[] = [
-    {
-      docID: '1',
-      gameId: '1',
-      score: 0,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      color: 'danger',
-      name:'Red Team',
-    },
-    {
-      docID: '2',
-      gameId: '1',
-      score: 0,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      color: 'secondary',
-      name:'Blue Team',
-    },
-    {
-      docID: '3',
-      gameId: '1',
-      score: 0,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      color: 'tertiary',
-      name:'Purple Team',
-    },
-    {
-      docID: '4',
-      gameId: '1',
-      score: 0,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      color: 'success',
-      name:'Green Team',
-    },
-    {
-      docID: '5',
-      gameId: '1',
-      score: 0,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      color: 'vibrant',
-      name:'Yellow Team',
-    },
-    {
-      docID: '6',
-      gameId: '1',
-      score: 0,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      color: 'warning',
-      name:'Orange Team',
-    },
-];
+  public currentTeams: ITeam[] = [];
   public isLoading = false;
   private gameId = '';
   constructor(
@@ -74,17 +24,16 @@ export class GamePage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.isLoading = true;
     this.gameId = this.route.snapshot.params.id;
     if(this.gameId) {
       await this.getTeams();
     }
-    this.isLoading = false;
   }
 
   public async incrementTeamScore(team: ITeam) {
     if(team.score < 10000) {
       team.score += 100;
+      await this.teamService.updateTeamScore(team.docID, team);
     } else {
       await this.presentToastService.presentToast('Team score cannot reach 10000', 3000, 'danger');
     }
@@ -107,6 +56,12 @@ export class GamePage implements OnInit {
           ...game.data()
         };
       });
+      const teamsResult = await this.teamService.getTeamsByGameId(this.gameId);
+      if(teamsResult != null) {
+        // @ts-ignore
+        this.currentTeams = teamsResult;
+        console.log(this.currentTeams);
+      }
     }
 
   }

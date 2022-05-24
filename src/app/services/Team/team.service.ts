@@ -36,13 +36,20 @@ export class TeamService {
   async getTeamsByGameId(gameId: string) {
     const teamRef = this.teamsCollection.ref;
     const teamsByGameIdQuery = teamRef.where('gameId', '==', gameId).orderBy('score', 'desc');
+    const teams = [];
     const unsubscribe = onSnapshot(teamsByGameIdQuery, (querySnapshot) => {
-      const teams = [];
       querySnapshot.forEach((doc) => {
-        teams.push(doc.data());
+        teams.push({
+          id: doc.id,
+          ...doc.data(),
+        });
       });
-      console.log(teams);
     });
-    console.log(teamsByGameIdQuery);
+    return teams;
+  }
+
+  async updateTeamScore(teamId: string, team: ITeam) {
+    return await this.teamsCollection.doc(teamId).update(
+      {...team, timestamp: firebase.firestore.FieldValue.serverTimestamp()});
   }
 }
