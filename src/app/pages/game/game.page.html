@@ -1,20 +1,20 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Game 03/02/2022</ion-title>
+    <ion-title *ngIf="currentGame">{{convertFirebaseTimestampToDate(currentGame?.timestamp) | date :"medium"}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-    <ion-item *ngFor="let team of teams" [color]="team.color" style="margin: 10px;">
-      <h1 slot="start" style="height: 3.5rem;">{{ team.name }}</h1>
-      <br />
-      <div id="controls" slot="end">
-        <ion-icon style="margin: 0 20px" name="remove-circle" (click)="decrementTeamScore(team)"></ion-icon>
-        <span>{{ team.score }}</span>
-        <ion-icon style="margin: 0 20px" name="add-circle" (click)="incrementTeamScore(team)"></ion-icon>
-      </div>
+<ion-content [fullscreen]="true" *ngIf="!this.isLoading">
+    <ion-item *ngFor="let team of currentTeams" [color]="team.color" style="margin: 10px;">
+        <h1 slot="start" style="height: 3.5rem;">{{ team.name }}</h1>
+        <div id="controls" slot="end">
+          <ion-icon style="margin: 0 20px; float: left" name="remove-circle" (click)="decrementTeamScore(team)"></ion-icon>
+          <span>{{ team.score }}</span>
+          <ion-icon style="margin: 0 20px; float: right;" name="add-circle" (click)="incrementTeamScore(team)"></ion-icon>
+        </div>
     </ion-item>
+
 </ion-content>

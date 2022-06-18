@@ -1,7 +1,7 @@
 import firebase from 'firebase/compat/app';
 
 export default interface ITeam {
-  docID?: string;
+  id?: string;
   gameId?: string;
   score: number;
   timestamp: firebase.firestore.FieldValue;
