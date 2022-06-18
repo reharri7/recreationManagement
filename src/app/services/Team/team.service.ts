@@ -3,7 +3,6 @@ import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat
 import firebase from 'firebase/compat/app';
 import ITeam from '../../models/team.model';
 import {ToastService} from '../Toast/toast.service';
-import {onSnapshot} from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +10,7 @@ import {onSnapshot} from "@angular/fire/firestore";
 export class TeamService {
 
   public teamsCollection: AngularFirestoreCollection<ITeam>;
+  private teams: ITeam[] = [];
 
   constructor(
     private db: AngularFirestore,
@@ -33,23 +33,8 @@ export class TeamService {
     }
   }
 
-  async getTeamsByGameId(gameId: string) {
-    const teamRef = this.teamsCollection.ref;
-    const teamsByGameIdQuery = teamRef.where('gameId', '==', gameId).orderBy('score', 'desc');
-    const teams = [];
-    const unsubscribe = onSnapshot(teamsByGameIdQuery, (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        teams.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-    });
-    return teams;
-  }
-
-  async updateTeamScore(teamId: string, team: ITeam) {
-    return await this.teamsCollection.doc(teamId).update(
+  async updateTeamScore(team) {
+    return await this.teamsCollection.doc(team.id).update(
       {...team, timestamp: firebase.firestore.FieldValue.serverTimestamp()});
   }
 }
