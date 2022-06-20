@@ -94,6 +94,9 @@ export class HomePage implements OnInit {
       await this.toastService.presentToast(error.message() ?? 'Something went wrong. Please try again later', 5000, 'danger');
     }
   }
+  public async deleteGame(id: string) {
+    await this.gameService.deleteGameById(id);
+  }
 
   convertFirebaseTimestampToDate(incomingTimestamp: any): Date {
     return new Date(incomingTimestamp.seconds * 1000);

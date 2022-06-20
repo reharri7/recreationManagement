@@ -23,6 +23,16 @@ export class GameService {
     return await firebase.firestore().collection('games').get();
   }
 
+  async deleteGameById(id: string) {
+    const teamRef = this.gamesCollection.ref;
+    const teamsByGameIdQuery = teamRef.where(firebase.firestore.FieldPath.documentId(), '==', id).limit(1);
+    await teamsByGameIdQuery.get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        doc.ref.delete();
+      });
+    });
+  }
+
   async getGameById(id: string) {
     const teamRef = this.gamesCollection.ref;
     const teamsByGameIdQuery = teamRef.where(firebase.firestore.FieldPath.documentId(), '==', id).limit(1);

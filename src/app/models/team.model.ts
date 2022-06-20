@@ -7,4 +7,5 @@ export default interface ITeam {
   timestamp: firebase.firestore.FieldValue;
   color: string;
   name: string;
+  metadata?;
 }
