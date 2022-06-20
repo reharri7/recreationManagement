@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ToastService} from '../../services/Toast/toast.service';
 import ITeam from '../../models/team.model';
 import IGame from '../../models/game.model';
@@ -14,13 +14,12 @@ import {onSnapshot} from '@angular/fire/firestore';
   styleUrls: ['./game.page.scss'],
 })
 
-export class GamePage implements OnInit, OnDestroy {
+export class GamePage implements OnInit {
   public teamsCollection: AngularFirestoreCollection<ITeam>;
   public currentGame: IGame;
   public currentTeams: ITeam[] = [];
   public isLoading = false;
   private gameId = '';
-  private unsubscribeTeams;
   constructor(
     private db: AngularFirestore,
     private presentToastService: ToastService,
@@ -43,22 +42,18 @@ export class GamePage implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
-  async ngOnDestroy() {
-    this.unsubscribeTeams();
-  }
-
   public async incrementTeamScore(team: ITeam) {
-    if(team.score < 100000) {
-      team.score += 1000;
+    if(team.score < 10000) {
+      team.score += 100;
       await this.teamService.updateTeamScore(team);
     } else {
-      await this.presentToastService.presentToast('Team score cannot reach 100000', 3000, 'danger');
+      await this.presentToastService.presentToast('Team score cannot reach 10000', 3000, 'danger');
     }
   }
 
   public async decrementTeamScore(team: ITeam) {
     if(team.score > 0) {
-      team.score -= 1000;
+      team.score -= 100;
       await this.teamService.updateTeamScore(team);
     } else {
       await this.presentToastService.presentToast('Team score cannot be below 0', 3000, 'danger');
@@ -82,7 +77,7 @@ export class GamePage implements OnInit, OnDestroy {
   public getTeams() {
     const teamRef = this.teamsCollection.ref;
     const teamsByGameIdQuery = teamRef.where('gameId', '==', this.currentGame.docID);
-    this.unsubscribeTeams = onSnapshot(teamsByGameIdQuery, (snapshot) => {
+    const unsubscribe = onSnapshot(teamsByGameIdQuery, (snapshot) => {
       const teams: ITeam[] = [];
       snapshot.docs.forEach((doc) => {
         teams.push({ ...doc.data(), id: doc.id});
