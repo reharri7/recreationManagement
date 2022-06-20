@@ -9,7 +9,7 @@
 <ion-content [fullscreen]="true" style="text-align: center;" *ngIf="!isLoading">
   <h1>List of Games <ion-icon name="arrow-down-circle"></ion-icon></h1>
   <ion-item-sliding *ngFor="let game of currentGames" (click)="routeToGame(game.docID)">
-    <ion-item-options side="end">
+    <ion-item-options>
       <ion-item-option color="danger" (click)="deleteGame(game.docID)">Delete Game</ion-item-option>
     </ion-item-options>
     <h1>{{convertFirebaseTimestampToDate(game.timestamp) | date :"medium"}}</h1>
