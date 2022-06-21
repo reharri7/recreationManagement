@@ -99,6 +99,20 @@ export class HomePage implements OnInit {
     return new Date(incomingTimestamp.seconds * 1000);
   }
 
+  async deleteGame(id: string, index: number) {
+    const beginSlice = this.currentGames.slice(0, index);
+    const endSlice = this.currentGames.slice(index + 1);
+    const deletedItem = this.currentGames[index];
+    try {
+      await this.teamService.deleteTeamsByGameId(id);
+      await this.gameService.deleteGame(id);
+      this.currentGames = [...beginSlice, ...endSlice];
+    } catch (error) {
+      this.currentGames = [...beginSlice, deletedItem, ...endSlice];
+      await this.toastService.presentToast('Unable to delete item right now. Please try again later', 5000, 'danger');
+    }
+  }
+
   private async getAllGames() {
     try {
       const result = await this.gameService.getGames();

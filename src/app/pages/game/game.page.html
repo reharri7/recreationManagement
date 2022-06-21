@@ -9,8 +9,10 @@
 
 <ion-content [fullscreen]="true" *ngIf="!this.isLoading">
     <ion-item *ngFor="let team of currentTeams" [color]="team.color" style="margin: 10px;">
-        <h1 slot="start" style="height: 3.5rem;">{{ team.name }}</h1>
-        <div id="controls" slot="end">
+        <h1 style="height: 3.5rem;">{{ team.name }}</h1>
+      <br>
+      <hr>
+        <div id="controls">
           <ion-icon style="margin: 0 20px; float: left" name="remove-circle" (click)="decrementTeamScore(team)"></ion-icon>
           <span>{{ team.score }}</span>
           <ion-icon style="margin: 0 20px; float: right;" name="add-circle" (click)="incrementTeamScore(team)"></ion-icon>

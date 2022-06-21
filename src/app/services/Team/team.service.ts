@@ -33,6 +33,16 @@ export class TeamService {
     }
   }
 
+  async deleteTeamsByGameId(gameId: string) {
+    const teamRef = this.teamsCollection.ref;
+    const teamsByGameIdQuery = teamRef.where('gameId', '==', gameId);
+    return await teamsByGameIdQuery.get().then(((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    }));
+  }
+
   async updateTeamScore(team) {
     return await this.teamsCollection.doc(team.id).update(
       {...team, timestamp: firebase.firestore.FieldValue.serverTimestamp()});
