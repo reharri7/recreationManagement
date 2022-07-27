@@ -8,14 +8,12 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" *ngIf="!this.isLoading">
-    <ion-item *ngFor="let team of currentTeams" [color]="team.color" style="margin: 10px;">
-      <h1 style="height: 3.5rem;">{{ team.name }}</h1>
-      <br>
-      <hr>
-      <div id="controls">
-        <ion-icon style="margin: 0 20px; float: left" name="remove-circle" (click)="decrementTeamScore(team)"></ion-icon>
-        <span>{{ team.score | number:'1.0' : 'en-us' }}</span>
-        <ion-icon style="margin: 0 20px; float: right;" name="add-circle" (click)="incrementTeamScore(team)"></ion-icon>
-      </div>
+    <ion-item *ngFor="let team of currentTeams" [color]="team.color" style="margin: 10px; align-items: center">
+      <h3 id="teamHeading" style="height: 3.5rem;">{{ team.name }}</h3>
+      <ion-buttons  slot="end">
+        <ion-button><ion-icon style="margin: 0 20px;" name="remove-circle" (click)="decrementTeamScore(team)"></ion-icon></ion-button>
+        <p style="display: inline">{{ team.score | number:'1.0' : 'en-us' }}</p>
+        <ion-button><ion-icon style="margin: 0 20px;" name="add-circle" (click)="incrementTeamScore(team)"></ion-icon></ion-button>
+      </ion-buttons>
     </ion-item>
 </ion-content>
