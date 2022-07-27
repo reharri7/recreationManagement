@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ToastService} from '../../services/Toast/toast.service';
 import ITeam from '../../models/team.model';
 import IGame from '../../models/game.model';
@@ -17,7 +17,7 @@ import {onSnapshot} from '@angular/fire/firestore';
 export class GamePage implements OnInit, OnDestroy {
   public teamsCollection: AngularFirestoreCollection<ITeam>;
   public currentGame: IGame;
-  public currentTeams: ITeam[] = [];
+  public currentTeams: ITeam[];
   public isLoading = false;
   private gameId = '';
   private unsubscribe;
@@ -26,7 +26,8 @@ export class GamePage implements OnInit, OnDestroy {
     private presentToastService: ToastService,
     private gameService: GameService,
     private teamService: TeamService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.teamsCollection = db.collection('teams');
   }
@@ -37,7 +38,7 @@ export class GamePage implements OnInit, OnDestroy {
     if(this.gameId) {
       const result = await this.getGame();
       if(result) {
-        this.getTeams();
+        await this.getTeams();
       }
     }
     this.isLoading = false;
@@ -81,20 +82,22 @@ export class GamePage implements OnInit, OnDestroy {
     return false;
   }
 
-  public getTeams() {
+  public async getTeams() {
     const teamRef = this.teamsCollection.ref;
     const teamsByGameIdQuery = teamRef.where('gameId', '==', this.currentGame.docID);
-    this.unsubscribe = onSnapshot(teamsByGameIdQuery, (snapshot) => {
+    this.unsubscribe = await onSnapshot(teamsByGameIdQuery, (querySnapshot) => {
       const teams: ITeam[] = [];
-      snapshot.docs.forEach((doc) => {
+      querySnapshot.forEach((doc) => {
         teams.push({ ...doc.data(), id: doc.id});
       });
+      console.log(teams);
       this.setTeams(teams);
     });
   }
 
   public setTeams(teams: ITeam[]): void {
     this.currentTeams = teams;
+    this.changeDetectorRef.detectChanges();
   }
 
   convertFirebaseTimestampToDate(incomingTimestamp: any): Date {
