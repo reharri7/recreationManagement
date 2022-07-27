@@ -90,6 +90,7 @@ export class GamePage implements OnInit, OnDestroy {
       querySnapshot.forEach((doc) => {
         teams.push({ ...doc.data(), id: doc.id});
       });
+      console.log(teams);
       this.setTeams(teams);
     });
   }
